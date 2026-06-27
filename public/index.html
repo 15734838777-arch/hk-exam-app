@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🔮 香港保险牌照刷题</title>
+<title>📘 保险刷题 · 香港保险牌照考试</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,28 +13,28 @@
 <!-- ==================== 登录页 ==================== -->
 <div id="page-login" class="page active">
   <div class="login-box">
-    <span class="logo">🔮</span>
-    <h1>保险刷题</h1>
-    <p class="sub">香港保险牌照 · 考试一 &amp; 考试三<br>刷题 · 错题 · 知识点讲解</p>
+    <span class="icon">📘</span>
+    <h1>保险刷题系统</h1>
+    <p class="sub">香港保险牌照考试·卷一 &amp; 卷三<br>刷题 · 错题记录 · 知识点详解</p>
 
     <div id="login-view">
       <div class="fg">
-        <label>输入登录代号</label>
-        <input id="login-code" class="input" type="text" placeholder="例如：A7K3M9" maxlength="6" style="text-transform:uppercase;text-align:center;font-size:20px;letter-spacing:4px">
+        <label>登录代号</label>
+        <input id="login-code" class="input" type="text" placeholder="例：A7K3M9" maxlength="6" style="text-align:center;font-size:20px;letter-spacing:4px;text-transform:uppercase">
       </div>
-      <button id="btn-login" class="btn btn-pri">🔑 登录</button>
-      <p id="login-error" style="color:#f44336;font-size:13px;margin-top:8px"></p>
-      <p style="margin-top:16px;color:#555577;font-size:13px">还没有登录代号？</p>
-      <button id="btn-register" class="btn btn-sec" style="margin-top:8px">🔮 领取登录代号</button>
+      <button id="btn-login" class="btn btn-pri">登录</button>
+      <p id="login-error" style="color:#e74c3c;font-size:13px;margin-top:8px"></p>
+      <p style="margin-top:16px;color:#7a8a9a;font-size:13px">新用户？先注册一个登录代号</p>
+      <button id="btn-register" class="btn btn-sec" style="margin-top:8px">注册新代号</button>
     </div>
 
     <div id="welcome-view" style="display:none">
-      <p style="color:#8888aa;font-size:14px;margin-bottom:8px">🎉 你的专属登录代号：</p>
+      <p style="color:#5a6a7a;font-size:14px;margin-bottom:12px;font-weight:600">🎉 注册成功！你的登录代号：</p>
       <div id="new-code-display" class="code-display">A7K3M9</div>
       <p class="code-hint">请牢记此代号，之后用它登录即可<br>每个代号对应独立的刷题记录</p>
-      <button id="btn-register-again" class="btn btn-sec" style="margin-top:16px">再领一个代号</button>
       <br>
-      <button class="btn btn-pri" style="margin-top:8px" onclick="document.getElementById('login-view').style.display='block';this.parentElement.style.display='none';document.getElementById('login-code').value=document.getElementById('new-code-display').textContent;document.getElementById('btn-login').click()">直接用这个登录 →</button>
+      <button class="btn btn-pri" onclick="document.getElementById('login-view').style.display='block';this.parentElement.style.display='none';document.getElementById('login-code').value=document.getElementById('new-code-display').textContent;document.getElementById('btn-login').click()">立即登录 →</button>
+      <button id="btn-register-again" class="btn btn-sec" style="margin-top:8px">重新注册</button>
     </div>
 
     <div id="new-code" style="display:none"></div>
@@ -45,7 +45,7 @@
 <div id="page-main" class="page">
   <!-- 顶部 -->
   <div class="header">
-    <h1>🔮 保险刷题</h1>
+    <h1>📘 保险刷题</h1>
     <div class="header-right">
       <span class="code-tag" id="header-code">------</span>
       <button id="btn-logout" class="btn-sm">退出</button>
@@ -54,40 +54,37 @@
 
   <!-- Tab -->
   <div class="tabs">
-    <button id="tab-exam" class="tab active">📝 刷题</button>
-    <button id="tab-wrong" class="tab">❌ 错题</button>
-    <button id="tab-stats" class="tab">📊 统计</button>
+    <button id="tab-exam" class="tab active">刷题</button>
+    <button id="tab-wrong" class="tab">错题</button>
+    <button id="tab-stats" class="tab">统计</button>
   </div>
 
-  <!-- 页面内容（避让底部） -->
+  <!-- 页面内容 -->
   <div class="page-content">
 
     <!-- 刷题 -->
     <div id="page-exam" class="page active">
-      <!-- 考试选择 -->
       <div id="exam-select" class="exam-select">
         <button id="exam-1-btn" class="exam-btn">
           <span class="num">1</span>
-          <span class="name">保险考试一</span>
+          <span class="name">保险原理及实务</span>
         </button>
         <button id="exam-3-btn" class="exam-btn">
           <span class="num">3</span>
-          <span class="name">保险考试三</span>
+          <span class="name">长期保险</span>
         </button>
       </div>
 
-      <!-- 刷题区 -->
       <div id="exam-area" style="display:none">
         <div class="card">
           <div class="card-title">
             <span id="exam-header">考试 X</span>
-            <span style="margin-left:auto;font-size:13px;color:#666688" id="exam-progress">0 / 0</span>
+            <span style="margin-left:auto;font-size:13px;color:#7a8a9a" id="exam-progress">0 / 0</span>
           </div>
-          <p id="exam-count" style="font-size:12px;color:#555577;margin-bottom:10px"></p>
-          <p id="question-text" style="font-size:15px;line-height:1.7;margin-bottom:16px"></p>
+          <p id="exam-count" style="font-size:12px;color:#aab5c0;margin-bottom:10px"></p>
+          <p id="question-text" style="font-size:15px;line-height:1.8;margin-bottom:16px;color:#2c3e50"></p>
           <div id="options-container"></div>
 
-          <!-- 结果 -->
           <div id="result-area" style="display:none;margin-top:12px">
             <div id="result-badge" class="result-badge"></div>
             <div id="explanation-box" class="explanation">
@@ -105,10 +102,10 @@
       <div id="wrong-review" style="display:none">
         <div class="card">
           <div class="card-title">
-            <span>📖 错题复习</span>
-            <span style="margin-left:auto;font-size:13px;color:#666688" id="wrong-progress">0 / 0</span>
+            <span>错题复习</span>
+            <span style="margin-left:auto;font-size:13px;color:#7a8a9a" id="wrong-progress">0 / 0</span>
           </div>
-          <p id="wrong-q-text" style="font-size:15px;line-height:1.7;margin-bottom:16px"></p>
+          <p id="wrong-q-text" style="font-size:15px;line-height:1.8;margin-bottom:16px;color:#2c3e50"></p>
           <div id="wrong-options"></div>
           <div style="margin-top:16px">
             <div id="wrong-correct" class="result-badge correct" style="margin-bottom:8px"></div>
@@ -144,7 +141,7 @@
     </div>
   </div>
 
-  <div class="bottom-bar" id="exam-select-bar" style="display:flex">
+  <div class="bottom-bar" id="exam-select-bar">
     <div class="inner" style="width:100%">
       <button id="btn-reset-exam" class="btn btn-sec" style="padding:10px">← 切换科目</button>
     </div>
