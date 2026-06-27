@@ -234,9 +234,9 @@ async function startExam(examType) {
   try {
     const res = await API.getUnansweredQuestions(STATE.user.id, examType);
     if (res.success && res.questions.length > 0) {
-      STATE.questions = shuffle(res.questions);
+      STATE.questions = res.questions;  // 不随机打乱，保持题目顺序
       DOM.examHeader.textContent = `考试 ${examType}`;
-      showQuestion(0);
+      showQuestion(0);  // 永远从第一道未答题开始
     } else {
       DOM.examArea.innerHTML = `<div class="card" style="text-align:center;padding:40px">
         <div style="font-size:48px;margin-bottom:12px">📭</div>
