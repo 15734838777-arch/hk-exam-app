@@ -1,0 +1,73 @@
+{
+  "questions": [
+    {
+      "exam_type": "1",
+      "section": "保险原理",
+      "question_text": "保险的核心功能是什么？",
+      "options": ["投资增值", "风险转移", "储蓄积累", "避税工具"],
+      "correct_index": 1,
+      "knowledge_point": "保险基本原理",
+      "explanation": "保险的核心功能是风险转移，通过将个体面临的风险集中到保险机构，由众多投保人共同分担损失。投资增值、储蓄积累等是部分保险产品的附加功能，而非核心功能。"
+    },
+    {
+      "exam_type": "1",
+      "section": "保险原理",
+      "question_text": "以下哪项不属于保险的基本原则？",
+      "options": ["最大诚信原则", "保险利益原则", "投资回报原则", "近因原则"],
+      "correct_index": 2,
+      "knowledge_point": "保险基本原则",
+      "explanation": "保险的四大基本原则包括：最大诚信原则、保险利益原则、近因原则和损失补偿原则。投资回报原则不属于保险基本原则，而是投资领域的考量因素。"
+    },
+    {
+      "exam_type": "1",
+      "section": "保险监管",
+      "question_text": "香港保险业监管局（IA）的主要职责是什么？",
+      "options": [
+        "制定保费价格",
+        "监管保险公司合规经营",
+        "直接销售保险产品",
+        "管理保险基金投资"
+      ],
+      "correct_index": 1,
+      "knowledge_point": "香港保险监管",
+      "explanation": "香港保险业监管局（Insurance Authority）的主要职责是监管保险公司的合规经营，保障保单持有人的权益，促进保险业的稳定健康发展。IA不直接参与保险产品的定价、销售或基金管理。"
+    },
+    {
+      "exam_type": "3",
+      "section": "投资相连保险",
+      "question_text": "以下哪项是投资相连保险（ILAS）的特点？",
+      "options": [
+        "保证固定回报率",
+        "投资风险由保险公司承担",
+        "保单价值与投资基金表现挂钩",
+        "不收取任何管理费用"
+      ],
+      "correct_index": 2,
+      "knowledge_point": "投资相连保险",
+      "explanation": "投资相连保险（Investment-Linked Assurance Scheme, ILAS）的特点是保单价值与所选投资基金的表現挂钩，投资风险由保单持有人承担，保险公司会收取管理费及其他费用，且不保证回报率。"
+    },
+    {
+      "exam_type": "3",
+      "section": "退休规划",
+      "question_text": "香港强积金（MPF）制度中，雇主和雇员各自的最低供款比例为？",
+      "options": [
+        "雇主3%，雇员3%",
+        "雇主5%，雇员5%",
+        "雇主10%，雇员5%",
+        "雇主5%，雇员3%"
+      ],
+      "correct_index": 1,
+      "knowledge_point": "强积金供款",
+      "explanation": "根据香港强积金（MPF）制度，雇主和雇员各自的最低强制性供款比例为雇员有关入息的5%，即雇主5%+雇员5%=10%，但设有最低及最高有关入息水平。"
+    },
+    {
+      "exam_type": "3",
+      "section": "保险产品",
+      "question_text": "以下哪种保险产品提供保证现金价值？",
+      "options": ["定期寿险", "终身寿险", "意外保险", "医疗保险"],
+      "correct_index": 1,
+      "knowledge_point": "人寿保险产品特征",
+      "explanation": "终身寿险（Whole Life Insurance）具有储蓄成分，会累积保证现金价值。而定期寿险（Term Life）是纯保障型产品，不累积现金价值；意外保险和医疗保险属于纯保障型产品，同样不具备现金价值积累功能。"
+    }
+  ]
+}

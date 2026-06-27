@@ -1,0 +1,6 @@
+node_modules/
+db/exam.db
+db/exam.db-wal
+db/exam.db-shm
+*.bak
+.DS_Store
