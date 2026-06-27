@@ -133,7 +133,7 @@ DOM.loginBtn.addEventListener('click', async () => {
     const res = await API.login(code);
     if (res.success) {
       STATE.user = res.user;
-      localStorage.setItem('hk_exam_user', JSON.stringify(res.user));
+      sessionStorage.setItem('hk_exam_user', JSON.stringify(res.user));
       enterMain();
     } else {
       DOM.loginError.textContent = res.message || '登录失败';
@@ -153,7 +153,7 @@ DOM.loginCode.addEventListener('keydown', e => {
 
 // 自动登录
 function tryAutoLogin() {
-  const saved = localStorage.getItem('hk_exam_user');
+  const saved = sessionStorage.getItem('hk_exam_user');
   if (saved) {
     const user = JSON.parse(saved);
     STATE.user = user;
@@ -173,7 +173,7 @@ function enterMain() {
 }
 
 DOM.btnLogout.addEventListener('click', () => {
-  localStorage.removeItem('hk_exam_user');
+  sessionStorage.removeItem('hk_exam_user');
   STATE.user = null;
   showPage('page-login');
   DOM.loginView.style.display = 'block';
