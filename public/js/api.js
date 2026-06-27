@@ -60,5 +60,10 @@ const API = {
   // 重置答题记录
   resetAnswers(user_id) {
     return this.request('POST', `/user/${user_id}/reset`);
+  },
+
+  // 获取用户未答的题目（按上次进度继续）
+  getUnansweredQuestions(user_id, exam_type) {
+    return this.request('GET', `/user/${user_id}/questions/${exam_type}`);
   }
 };

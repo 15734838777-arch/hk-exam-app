@@ -92,6 +92,29 @@ app.get('/api/questions/:exam_type', (req, res) => {
   res.json({ success: true, count: parsed.length, questions: parsed });
 });
 
+// GET /api/user/:user_id/questions/:exam_type - 获取用户未答的题目
+app.get('/api/user/:user_id/questions/:exam_type', (req, res) => {
+  const { user_id, exam_type } = req.params;
+  if (!['1', '3'].includes(exam_type)) {
+    return res.status(400).json({ success: false, message: '考试类型只能是 1 或 3' });
+  }
+  const questions = db.prepare(`
+    SELECT q.id, q.exam_type, q.section, q.question_text, q.options, q.knowledge_point
+    FROM questions q
+    WHERE q.exam_type = ?
+    AND q.id NOT IN (
+      SELECT a.question_id FROM answers a WHERE a.user_id = ?
+    )
+    ORDER BY q.id
+  `).all(exam_type, user_id);
+
+  const parsed = questions.map(q => ({
+    ...q,
+    options: JSON.parse(q.options)
+  }));
+  res.json({ success: true, count: parsed.length, questions: parsed });
+});
+
 // GET /api/question/:id - 获取单题（含知识点讲解）
 app.get('/api/question/:id', (req, res) => {
   const q = db.prepare('SELECT * FROM questions WHERE id = ?').get(req.params.id);

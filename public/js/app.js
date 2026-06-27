@@ -232,7 +232,7 @@ async function startExam(examType) {
   DOM.examHeader.textContent = `考试 ${examType} — 题目加载中...`;
 
   try {
-    const res = await API.getQuestions(examType);
+    const res = await API.getUnansweredQuestions(STATE.user.id, examType);
     if (res.success && res.questions.length > 0) {
       STATE.questions = shuffle(res.questions);
       DOM.examHeader.textContent = `考试 ${examType}`;
