@@ -16,13 +16,11 @@ if (!fs.existsSync(filePath)) {
   process.exit(1);
 }
 
-// 检查题库是否已存在
-const existingCount = db.prepare('SELECT COUNT(*) as c FROM questions').get().c;
-if (existingCount > 0) {
-  console.log(`📚 题库已有 ${existingCount} 道题，跳过导入`);
-  db.close();
-  process.exit(0);
-}
+// 获取已有题目的文本，用于去重
+const existingQuestions = new Set(
+  db.prepare('SELECT question_text FROM questions').all().map(r => r.question_text)
+);
+console.log(`📚 题库已有 ${existingQuestions.size} 道题`);
 
 const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
@@ -47,6 +45,7 @@ if (!Array.isArray(questions) || questions.length === 0) {
 // 验证每个题目
 let valid = 0;
 let invalid = 0;
+let skipped = 0;
 const insert = db.prepare(`
   INSERT INTO questions (exam_type, section, question_text, options, correct_index, knowledge_point, explanation)
   VALUES (@exam_type, @section, @question_text, @options, @correct_index, @knowledge_point, @explanation)
@@ -59,6 +58,11 @@ const insertMany = db.transaction((items) => {
       invalid++;
       continue;
     }
+    // 去重：题目文本相同则跳过
+    if (existingQuestions.has(q.question_text)) {
+      skipped++;
+      continue;
+    }
     insert.run({
       exam_type: String(q.exam_type),
       section: q.section || '',
@@ -68,13 +72,14 @@ const insertMany = db.transaction((items) => {
       knowledge_point: q.knowledge_point || '',
       explanation: q.explanation || ''
     });
+    existingQuestions.add(q.question_text);
     valid++;
   }
 });
 
 insertMany(questions);
 
-console.log(`✅ 导入完成: 成功 ${valid} 题, 跳过 ${invalid} 题`);
+console.log(`✅ 导入完成: 新增 ${valid} 题, 重复跳过 ${skipped} 题, 无效 ${invalid} 题`);
 console.log(`📊 题库统计:`);
 const stats = db.prepare('SELECT exam_type, COUNT(*) as count FROM questions GROUP BY exam_type').all();
 stats.forEach(s => console.log(`   考试 ${s.exam_type}: ${s.count} 题`));
