@@ -21,6 +21,8 @@ function initDb() {
   const d = getDb();
   const sql = fs.readFileSync(SCHEMA_PATH, 'utf-8');
   d.exec(sql);
+  // 兼容旧数据库：补上 last_active 列
+  try { d.exec('ALTER TABLE users ADD COLUMN last_active TEXT DEFAULT (datetime(\'now\', \'+8 hours\'))'); } catch(e) {}
   console.log('✅ 数据库初始化完成');
   return d;
 }

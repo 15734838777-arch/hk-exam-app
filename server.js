@@ -47,7 +47,7 @@ function generateLoginCode() {
 app.post('/api/register', (req, res) => {
   try {
     const code = generateLoginCode();
-    const result = db.prepare('INSERT INTO users (login_code) VALUES (?)').run(code);
+    const result = db.prepare('INSERT INTO users (login_code, last_active) VALUES (?, datetime(\'now\', \'+8 hours\'))').run(code);
     res.json({ success: true, login_code: code, user_id: result.lastInsertRowid });
   } catch (e) {
     console.error('注册错误:', e.message);
@@ -61,10 +61,13 @@ app.post('/api/login', (req, res) => {
   if (!login_code) {
     return res.status(400).json({ success: false, message: '请输入登录代号' });
   }
-  const user = db.prepare('SELECT id, login_code, nickname, created_at FROM users WHERE login_code = ?').get(login_code.toUpperCase());
+  const user = db.prepare('SELECT id, login_code, nickname, created_at, last_active FROM users WHERE login_code = ?').get(login_code.toUpperCase());
   if (!user) {
     return res.status(404).json({ success: false, message: '登录代号不存在，请检查或重新注册' });
   }
+  // 更新活跃时间
+  db.prepare("UPDATE users SET last_active = datetime('now', '+8 hours') WHERE id = ?").run(user.id);
+  user.last_active = new Date().toISOString();
   res.json({ success: true, user });
 });
 
@@ -125,6 +128,9 @@ app.post('/api/answer', (req, res) => {
       .run(user_id, question_id, selected_index, is_correct);
   }
 
+  // 更新用户活跃时间
+  db.prepare("UPDATE users SET last_active = datetime('now', '+8 hours') WHERE id = ?").run(user_id);
+
   res.json({
     success: true,
     is_correct: !!is_correct,
@@ -133,6 +139,39 @@ app.post('/api/answer', (req, res) => {
     explanation: q.explanation
   });
 });
+
+// POST /api/user/:user_id/reset - 重置答题记录
+app.post('/api/user/:user_id/reset', (req, res) => {
+  const { user_id } = req.params;
+  const user = db.prepare('SELECT id FROM users WHERE id = ?').get(user_id);
+  if (!user) {
+    return res.status(404).json({ success: false, message: '用户不存在' });
+  }
+  db.prepare('DELETE FROM answers WHERE user_id = ?').run(user_id);
+  db.prepare("UPDATE users SET last_active = datetime('now', '+8 hours') WHERE id = ?").run(user_id);
+  res.json({ success: true, message: '答题记录已清空，可以重新开始了' });
+});
+
+// GET /api/cleanup - 清理3天未活跃的用户（管理员用或定时任务触发）
+app.get('/api/cleanup', (req, res) => {
+  const deleted = db.prepare(`
+    DELETE FROM users
+    WHERE last_active < datetime('now', '-3 days', '+8 hours')
+  `).run();
+  console.log(`🧹 清理了 ${deleted.changes} 个不活跃用户`);
+  res.json({ success: true, deleted: deleted.changes });
+});
+
+// 定时清理：每30分钟检查一次
+setInterval(() => {
+  const deleted = db.prepare(`
+    DELETE FROM users
+    WHERE last_active < datetime('now', '-3 days', '+8 hours')
+  `).run();
+  if (deleted.changes > 0) {
+    console.log(`🧹 定时清理: 删除了 ${deleted.changes} 个超过3天未活跃的用户`);
+  }
+}, 30 * 60 * 1000);
 
 // GET /api/user/:user_id/wrong - 获取用户错题
 app.get('/api/user/:user_id/wrong', (req, res) => {

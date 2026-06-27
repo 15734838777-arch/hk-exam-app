@@ -55,5 +55,10 @@ const API = {
   // 错题统计
   getWrongStats(user_id) {
     return this.request('GET', `/user/${user_id}/wrong/stats`);
+  },
+
+  // 重置答题记录
+  resetAnswers(user_id) {
+    return this.request('POST', `/user/${user_id}/reset`);
   }
 };

@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   login_code TEXT UNIQUE NOT NULL,
   nickname TEXT DEFAULT '',
-  created_at TEXT DEFAULT (datetime('now', '+8 hours'))
+  created_at TEXT DEFAULT (datetime('now', '+8 hours')),
+  last_active TEXT DEFAULT (datetime('now', '+8 hours'))
 );
 
 -- 题库

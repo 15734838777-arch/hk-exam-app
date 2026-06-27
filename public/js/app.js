@@ -350,7 +350,7 @@ DOM.btnNext.addEventListener('click', async () => {
     DOM.examCount.innerHTML = `
       <div style="text-align:center;padding:20px">
         <p style="font-size:48px;margin-bottom:8px">🏆</p>
-        <p style="color:#b388ff;font-weight:700;margin-bottom:4px">恭喜完成本轮刷题</p>
+        <p style="color:#2d7d46;font-weight:700;margin-bottom:4px">恭喜完成本轮刷题</p>
         <button class="btn btn-pri" onclick="loadExamSelect()" style="margin-top:16px">换个科目刷</button>
         <button class="btn btn-sec" onclick="startExam('${STATE.examType}')" style="margin-top:8px">再来一轮</button>
       </div>
@@ -411,7 +411,7 @@ async function loadWrongList() {
         html += `<div class="wrong-item" data-index="${i}">
           <div class="q-text">${q.question_text}</div>
           <div class="meta">
-            <span class="tag" style="background:rgba(124,77,255,.1);color:#b388ff">考试${q.exam_type}</span>
+            <span class="tag" style="background:rgba(124,77,255,.1);color:#2d7d46">考试${q.exam_type}</span>
             <span class="tag" style="background:rgba(244,67,54,.1);color:#f44336">你选: ${labels[q.selected_index]}</span>
             <span class="tag" style="background:rgba(76,175,80,.1);color:#4caf50">正确: ${labels[q.correct_index]}</span>
           </div>
@@ -516,8 +516,8 @@ async function loadStats() {
         html += `<div class="card">
           <div class="card-title">📋 考试 ${s.exam_type}</div>
           <div class="dashboard-grid">
-            <div class="dash-card"><div class="num" style="color:#b388ff">${s.total_q}</div><div class="lbl">题目总数</div></div>
-            <div class="dash-card"><div class="num" style="color:#00e5ff">${s.answered}</div><div class="lbl">已答题数</div></div>
+            <div class="dash-card"><div class="num" style="color:#2d7d46">${s.total_q}</div><div class="lbl">题目总数</div></div>
+            <div class="dash-card"><div class="num" style="color:#3498db">${s.answered}</div><div class="lbl">已答题数</div></div>
             <div class="dash-card"><div class="num" style="color:#4caf50">${s.correct}</div><div class="lbl">答对</div></div>
             <div class="dash-card"><div class="num" style="color:#f44336">${s.wrong}</div><div class="lbl">答错</div></div>
           </div>
@@ -541,7 +541,31 @@ async function loadStats() {
       html += `</div>`;
     }
 
+    // 重置按钮
+    html += `<div style="text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid #e8ecf1">
+      <button id="btn-reset" class="btn btn-sec" style="width:auto;display:inline-block;padding:10px 24px;color:#e74c3c;border-color:#f5b7b1">🔄 重新开始</button>
+      <p style="font-size:11px;color:#aab5c0;margin-top:6px">清空所有答题记录，从头来一遍</p>
+    </div>`;
+
     DOM.statsContent.innerHTML = html;
+
+    // 绑定重置事件
+    document.getElementById('btn-reset')?.addEventListener('click', async () => {
+      if (!confirm('确定要清空所有刷题记录吗？\n这个操作不可撤销。')) return;
+      document.getElementById('btn-reset').disabled = true;
+      document.getElementById('btn-reset').textContent = '处理中...';
+      try {
+        const res = await API.resetAnswers(STATE.user.id);
+        if (res.success) {
+          alert('✅ 已清空所有记录，重新开始吧！');
+          loadStats();
+        }
+      } catch(e) {
+        alert('操作失败');
+      }
+      document.getElementById('btn-reset').disabled = false;
+      document.getElementById('btn-reset').textContent = '🔄 重新开始';
+    });
 
   } catch (e) {
     DOM.statsContent.innerHTML = `<p style="color:#f44336">加载失败：${e.message}</p>`;
