@@ -2,7 +2,9 @@ const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
 
-const DB_PATH = path.join(__dirname, 'exam.db');
+// 使用环境变量 DB_PATH 实现持久化存储（Railway Volume）
+// 默认存项目目录下
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'exam.db');
 const SCHEMA_PATH = path.join(__dirname, 'schema.sql');
 
 let db;
