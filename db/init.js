@@ -21,8 +21,17 @@ function initDb() {
   const d = getDb();
   const sql = fs.readFileSync(SCHEMA_PATH, 'utf-8');
   d.exec(sql);
-  // 兼容旧数据库：补上 last_active 列
-  try { d.exec('ALTER TABLE users ADD COLUMN last_active TEXT DEFAULT (datetime(\'now\', \'+8 hours\'))'); } catch(e) {}
+
+  // 兼容旧数据库：检查并补上 last_active 列
+  const cols = d.prepare("PRAGMA table_info('users')").all();
+  const hasLastActive = cols.some(c => c.name === 'last_active');
+  if (!hasLastActive) {
+    console.log('🔄 检测到旧数据库，正在升级 schema...');
+    d.exec("ALTER TABLE users ADD COLUMN last_active TEXT");
+    d.exec("UPDATE users SET last_active = created_at WHERE last_active IS NULL");
+    console.log('✅ 数据库升级完成');
+  }
+
   console.log('✅ 数据库初始化完成');
   return d;
 }

@@ -47,7 +47,8 @@ function generateLoginCode() {
 app.post('/api/register', (req, res) => {
   try {
     const code = generateLoginCode();
-    const result = db.prepare('INSERT INTO users (login_code, last_active) VALUES (?, datetime(\'now\', \'+8 hours\'))').run(code);
+    const result = db.prepare('INSERT INTO users (login_code) VALUES (?)').run(code);
+    db.prepare("UPDATE users SET last_active = datetime('now', '+8 hours') WHERE id = ?").run(result.lastInsertRowid);
     res.json({ success: true, login_code: code, user_id: result.lastInsertRowid });
   } catch (e) {
     console.error('注册错误:', e.message);
